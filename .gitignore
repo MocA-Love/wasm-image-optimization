@@ -6,3 +6,4 @@ node_modules
 /image_output
 .vscode
 pnpm-lock.yaml
+package-lock.json

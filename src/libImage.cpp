@@ -50,6 +50,29 @@ private:
     std::vector<uint8_t> m_buffer;
 };
 
+val size(std::string img_in)
+{
+    SDL_RWops *rw = SDL_RWFromConstMem(img_in.c_str(), img_in.size());
+    if (!rw)
+    {
+        return val::null();
+    }
+
+    SDL_Surface *srcSurface = IMG_Load_RW(rw, 1);
+    SDL_FreeRW(rw);
+    if (!srcSurface)
+    {
+        return val::null();
+    }
+
+    val result = val::object();
+    result.set("width", srcSurface->w);
+    result.set("height", srcSurface->h);
+
+    SDL_FreeSurface(srcSurface);
+    return result;
+}
+
 int getOrientation(std::string img)
 {
     int orientation = 1;
@@ -247,4 +270,5 @@ val optimize(std::string img_in, float width, float height, float quality, std::
 EMSCRIPTEN_BINDINGS(my_module)
 {
     function("optimize", &optimize);
+    function("size", &size);
 }
